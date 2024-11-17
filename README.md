@@ -2,7 +2,9 @@ Project Overview
 Live link: [*] in progress, will be provided soon
 Doc link: [**] in progress, will be provided soon
 
-This is a Django-based API designed for analytics services in areas such as sales performance, product profitability, and marketing conversion. The system offers detailed insights to help businesses track key performance metrics and optimize their strategies accordingly. Key features include advanced filtering, data aggregation, and reporting
+This is a Django-based API designed for analytics services in areas such as sales performance, product analytics, marketing conversion and financial analytics.
+The system offers detailed insights to help businesses track key performance metrics and optimize their strategies accordingly.
+Key features include advanced filtering, data aggregation, and reporting
 
 
 Installation Instructions
