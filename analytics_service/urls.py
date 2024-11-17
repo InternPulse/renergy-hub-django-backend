@@ -12,5 +12,5 @@ api_url_patterns = [
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1', include(api_url_patterns)),  # Base API path
+    path('api/v1/', include(api_url_patterns)),  # Base API path
 ]
