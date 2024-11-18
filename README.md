@@ -14,7 +14,7 @@ A Django-based service for tracking and analyzing cart abandonment rates in an e
 
 ## API Endpoints
 
-### Base URL: `http://127.0.0.1:8000/api/v1/api/v1/cart-abandonment-rate/`
+### Base URL: `http://127.0.0.1:8000/api/v1/cart-abandonment-rate/`
 
 | Endpoint                 | Method | Description                                  |
 |--------------------------|--------|----------------------------------------------|
