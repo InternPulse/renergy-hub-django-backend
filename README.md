@@ -29,3 +29,10 @@ A Django-based service for tracking and analyzing cart abandonment rates in an e
 3. Use the `/marketing_analytics/abandonment` endpoint to fetch abandonment analytics.
 
 ---
+
+---
+## test results
+
+![alt text](image.png)
+
+---
