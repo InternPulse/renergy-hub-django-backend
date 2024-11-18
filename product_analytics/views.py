@@ -5,10 +5,8 @@ from rest_framework import status
 from django.db.models import Sum, Count
 from .models import Product, SalesRecord, ProductEngagement
 from .serializers import ProductSerializer
-import logging
 
-# Configure logging for debugging
-logger = logging.getLogger(__name__)
+# Create your views here
 
 # Custom Pagination Class
 class CustomPagination(PageNumberPagination):
@@ -34,8 +32,7 @@ class TopSellingProductsView(APIView):
             serializer = ProductSerializer(paginated_products, many=True)
 
             return paginator.get_paginated_response(serializer.data)  # Default: 200 OK
-        except Exception as e:
-            logger.error(f"Unexpected error in TopSellingProductsView: {e}")
+        except Exception:
             return Response({'error': 'An internal server error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -52,15 +49,13 @@ class ProductEngagementView(APIView):
         except Product.DoesNotExist:
             return Response({'error': 'Product not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-
         if engagement_type not in ['view', 'click']:
             return Response({'error': 'Invalid engagement type. Accepted values: "view", "click".'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             ProductEngagement.objects.create(product=product, engagement_type=engagement_type)
             return Response({'message': 'Engagement recorded successfully.'}, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            logger.error(f"Unexpected error in ProductEngagementView POST: {e}")
+        except Exception:
             return Response({'error': 'An internal server error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request):
@@ -85,11 +80,8 @@ class ProductEngagementView(APIView):
             ]
 
             return paginator.get_paginated_response(response_data)  # Default: 200 OK
-        except Exception as e:
-            logger.error(f"Unexpected error in ProductEngagementView GET: {e}")
+        except Exception:
             return Response({'error': 'An internal server error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
 
 class ProfitMarginView(APIView):
@@ -112,6 +104,5 @@ class ProfitMarginView(APIView):
             return paginator.get_paginated_response(profit_margins)  # Default: 200 OK
         except ZeroDivisionError:
             return Response({'error': 'Division by zero occurred while calculating profit margin.'}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            logger.error(f"Unexpected error in ProfitMarginView: {e}")
+        except Exception:
             return Response({'error': 'An internal server error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

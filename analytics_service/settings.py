@@ -110,27 +110,4 @@ STATIC_URL = 'static/'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs/production.log',
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB per log file
-            'backupCount': 5,
-        },
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.handlers.logging.SentryHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file', 'sentry'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
+
