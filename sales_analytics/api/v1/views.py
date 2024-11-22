@@ -9,13 +9,13 @@ class SalesPerformanceView(APIView):
         service = SalesPerformanceService()
         revenue_trends = service.get_revenue_trends()
         sales_by_product = service.get_sales_by_product()
-        # sales_by_region = service.get_sales_by_region()
-        # sales_by_time_of_year = service.get_sales_by_time_of_year()
+        sales_by_region = service.get_sales_by_region()
+        sales_by_time_of_year = service.get_sales_by_time_of_year()
         data = {
             'revenue_trends': revenue_trends,
             'sales_by_product': sales_by_product,
-            # 'sales_by_region': sales_by_region,
-            # 'sales_by_time_of_year': sales_by_time_of_year
+            'sales_by_region': sales_by_region,
+            'sales_by_time_of_year': sales_by_time_of_year
         }
         serializer = SalesPerformanceSerializer(data)
         return Response(serializer.data)
