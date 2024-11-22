@@ -1,100 +1,159 @@
-# Renergy Hub Django Backend API
+Project Overview
+Live link: [*] in progress, will be provided soon
+Doc link: [**] in progress, will be provided soon
 
-## Project Overview
+This is a Django-based API designed for analytics services in areas such as sales performance, product analytics, marketing conversion and financial analytics.
+The system offers detailed insights to help businesses track key performance metrics and optimize their strategies accordingly.
+Key features include advanced filtering, data aggregation, and reporting
 
-Live link: is at http://
 
-Doc link: https://
-
-## Installation Instructions
-### Prerequisites
-
+Installation Instructions
+Prerequisites
 Before setting up the project locally, ensure you have the following prerequisites installed:
 
-- [Node.js](https://nodejs.org) (>=20.14.0).
-- A Database System (e.g., PostgreSQL, MySQL, SQLite)
+Python 3.8+
+PostgreSQL
+Virtualenv
 
-### How to run API Locally
+How to Run API Locally
+Clone the repository:
 
 1. Clone the repository:
-```bash
-git clone https://github.com/InternPulse/property-hive-backend-two.git
-```
+bash
+git clone https://github.com/InternPulse/renergy-hub-django-backend.git
 
-2. Change into the parent directory:
-```bash
-cd property-hive-backend-two
-```
+Navigate to the project directory:
+cd renergy-hub-django-backend
 
-3. Set appropriate values for the following Compulsory Environment Variables:
-```txt
-# Postgres connection string
-POSTGRES_DSN=""
-# Secret key for signing JWTs
-JWTKEY=""
-# API Port
-PORT=5000
-```
+Set up the virtual environment:
 
-4. Install the App dependencies:
-``` bash
-npm install
-```
+For Windows
+python -m venv venv
 
-5. Start the App:
-```bash
-npm run start-server
-```
+For macOS/Linux
+.\venv\Scripts\activate
+python -m venv venv
+source venv/bin/activate
 
-The API should now be running locally at [http://localhost:5000/](http://localhost:5000/).
+Install the app dependencies:
+pip install -r requirements.txt
 
+Set up the database and run migrations:
+python manage.py migrate
 
-# Commit Standards
+Start the API server:
+python manage.py runserver
 
-## Branches
+The API should now be running locally at http://localhost:8000/.
 
-- **dev** -> pr this branch for everything `backend` related
-- **main** -> **dont touch** this branch, this is what is running in production!
+Commit Standards and Guidelines
+Branches
+dev → Use this branch for all backend-related work.
+main → Do not touch this branch, as it represents the production version.
+Contribution Guidelines
+Fork the repository.
 
-## Contributions
+Set the origin branch:
+bash
+   git remote add origin https://github.com/InternPulse/renergy-hub-django-backend.git
 
-property-hive-backend-two is open to contributions, but I recommend creating an issue or replying in a comment to let us know what you are working on first that way we don't overwrite each other.
+Pull the latest changes from dev:
+git pull origin dev
 
-## Contribution Guidelines
+Create a new branch for your task:
+git checkout -b TicketNumber/(Feat/Bug/Fix/Chore)/Ticket-title
 
-1. Clone the repo `git clone https://github.com/InternPulse/property-hive-backend-two.git`.
-2. Open your terminal & set the origin branch: `git remote add origin https://github.com/InternPulse/property-hive-backend-two.git`
-3. Pull origin `git pull origin dev`
-4. Create a new branch for the task you were assigned to, eg `TicketNumber/(Feat/Bug/Fix/Chore)/Ticket-title` : `git checkout -b BA-001/Feat/Sign-Up-from`
-5. After making changes, do `git add .`
-6. Commit your changes with a descriptive commit message : `git commit -m "your commit message"`.
-7. To make sure there are no conflicts, run `git pull origin dev`.
-8. Push changes to your new branch, run `git push -u origin feat-csv-parser`.
-9. Create a pull request to the `dev` branch not `main`.
-10. Ensure to describe your pull request.
-11. > If you've added code that should be tested, add some test examples.
+After making changes, add and commit:
+git add .
+git commit -m "Your commit message"
+
+Push your branch:
+git push -u origin <dev>
+
+Open a pull request to dev (not main).
+
+Ensure your PR description is clear, especially if it introduces new functionality or requires testing
 
 
-# Merging
-Under any circumstances should you merge a pull request on a specific branch to the `dev` or `main` branch
+Project Structure
+The project is organized as follows:
 
-### _Commit CheatSheet_
+analytics_service/
+├── analytics_service/           # Main project directory
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py             # Global settings
+│   ├── urls.py                 # Root URL configuration
+│   ├── wsgi.py
+│   ├── sales_performance/      # App for Sales Performance Analytics
+│   ├── migrations/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py                 # App-specific URLs
+│   ├── views.py
+│   ├── product_performance/    # App for Product Performance Analytics
+│   ├── (similar structure as sales_performance)
+│   ├── marketing_conversion/   # App for Marketing & Conversion Analytics
+│   ├── (similar structure as sales_performance)
+│   ├── profitability_financial/ # App for Profitability & Financial Analytics
+│   ├── (similar structure as sales_performance)
+│   ├── shared/                  # Shared utilities and reusable components
+│   ├── __init__.py
+│   ├── filters.py               # Shared filters for all apps
+│   ├── utils.py                 # Helper functions
+│   ├── manage.py
+└── requirements.txt             # Project dependencies
 
-| Type     |                          | Description                                                                                                 |
-| -------- | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| feat     | Features                 | A new feature                                                                                               |
-| fix      | Bug Fixes                | A bug fix                                                                                                   |
-| docs     | Documentation            | Documentation only changes                                                                                  |
-| style    | Styles                   | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.)      |
-| refactor | Code Refactoring         | A code change that neither fixes a bug nor adds a feature                                                   |
-| perf     | Performance Improvements | A code change that improves performance                                                                     |
-| test     | Tests                    | Adding missing tests or correcting existing tests                                                           |
-| build    | Builds                   | Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |
-| ci       | Continuous Integrations  | Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) |
-| chore    | Chores                   | Other changes that don't modify, backend or test files                                                    |
-| revert   | Reverts                  | Reverts a previous commit                                                                                   |
 
-> _Sample Commit Messages_
+API Endpoints
+Here are some of the key endpoints available:
 
-- `chore: Updated README file`:= `chore` is used because the commit didn't make any changes to the backend or test folders in any way.
-- `feat: Added plugin info endpoints`:= `feat` is used here because the feature was non-existent before the commit.
+GET /api/v1/financial/analytics/
+Retrieves a list of all financial analytics records.
+
+GET /api/v1/financial/analytics/top_products/
+Retrieves a list of all top products with the highest profit records.
+
+GET /api/v1/financial/analytics/?date=2024-11-12
+Retrieves a list of financial analytics products by date.
+
+GET /api/v1/financial/analytics/?day=28
+Retrieves a list of financial analytics products by day.
+
+GET /api/v1/financial/analytics/?year=2022
+Retrieves a list of financial analytics products by year.
+
+GET /api/v1/financial/analytics/?month=31
+Retrieves a list of financial analytics products by exact month and day.
+
+GET /api/v1/financial/analytics/?year=2022&month=12
+Retrieves a list of financial analytics products by exact month, day, and year.
+
+GET /api/v1/financial/analytics/?start_date=2023-01-01&end_date=2023-02-28
+Retrieves a list of financial analytics products by a date range.
+
+GET /api/v1/financial/analytics/profit_records/
+Retrieves a list of financial analytics product records with profit alone.
+
+GET /api/v1/financial/analytics/selling_at_loss/
+Retrieves a list of financial analytics products with loss alone.
+
+Environment Variables
+You need to configure the following environment variables for the project to run locally:
+
+bash
+SECRET_KEY=your-secret-key
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost,.(*) # Allow localhost and all subdomains
+
+# Database connection settings for PostgreSQL
+DB_NAME=your-database-name
+DB_USER=your-database-user
+DB_PASSWORD=your-database-password
+DB_HOST=your-database-host
+DB_PORT=your-database-port
+
