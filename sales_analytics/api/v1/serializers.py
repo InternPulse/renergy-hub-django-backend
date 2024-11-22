@@ -5,5 +5,5 @@ class SalesPerformanceSerializer(serializers.Serializer):
     message = serializers.CharField(default="Data retrieved successfully")
     revenue_trends = serializers.DictField()
     sales_by_product = serializers.DictField()
-    # sales_by_region = serializers.DictField()
-    # sales_by_time_of_year = serializers.DictField()
+    sales_by_region = serializers.DictField()
+    sales_by_time_of_year = serializers.DictField()
