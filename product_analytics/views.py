@@ -5,6 +5,8 @@ from rest_framework import status
 from django.db.models import Sum, Count
 from .models import Product, SalesRecord, ProductEngagement
 from .serializers import ProductSerializer
+from rest_framework.permissions import IsAuthenticated
+
 
 
 # Custom Pagination Class
