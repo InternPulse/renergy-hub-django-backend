@@ -1,15 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from django.db.models import Sum, Count
 from .models import Product, SalesRecord, ProductEngagement
 from .serializers import ProductSerializer
-
-
-# Custom Pagination Class
-class CustomPagination(PageNumberPagination):
-    page_size = 10
+from .pagination import CustomPagination  # Updated import
 
 
 class TopSellingProductsView(APIView):
@@ -18,7 +13,6 @@ class TopSellingProductsView(APIView):
     """
     def get(self, request):
         try:
-            # Aggregate top-selling products
             top_products = (
                 SalesRecord.objects
                 .values('product')
@@ -32,16 +26,12 @@ class TopSellingProductsView(APIView):
             product_ids = [item['product'] for item in top_products]
             products = Product.objects.filter(id__in=product_ids).order_by('name')  # Explicitly order by name
 
-            # Paginate and serialize the results
             paginator = CustomPagination()
             paginated_products = paginator.paginate_queryset(products, request)
             serializer = ProductSerializer(paginated_products, many=True)
 
             return paginator.get_paginated_response(serializer.data)
-        except Exception as e:
-            return Response({'error': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
+          
 class ProductEngagementView(APIView):
     """
     View to handle product engagements (view, click) and retrieve engagement analytics.
@@ -69,7 +59,6 @@ class ProductEngagementView(APIView):
 
     def get(self, request):
         try:
-            # Aggregate engagement data
             engagement_data = (
                 ProductEngagement.objects
                 .select_related('product')
@@ -78,22 +67,14 @@ class ProductEngagementView(APIView):
                 .order_by('-total_engagements')  # Order by total engagements descending
             )
 
-            if not engagement_data:
-                return Response({'message': 'No engagement data available.'}, status=status.HTTP_404_NOT_FOUND)
-
-            # Paginate and format the response
             paginator = CustomPagination()
             paginated_data = paginator.paginate_queryset(engagement_data, request)
             response_data = [
-                {
-                    'product_name': item['product__name'],
-                    'total_engagements': item['total_engagements']
-                } for item in paginated_data
+                {'product_name': item['product__name'], 'total_engagements': item['total_engagements']}
+                for item in paginated_data
             ]
 
             return paginator.get_paginated_response(response_data)
-        except Exception as e:
-            return Response({'error': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ProfitMarginView(APIView):
@@ -102,16 +83,9 @@ class ProfitMarginView(APIView):
     """
     def get(self, request):
         try:
-            # Fetch all products with explicit ordering
-            products = Product.objects.all().order_by('name')  # Order by name
-
-            if not products.exists():
-                return Response({'message': 'No products available.'}, status=status.HTTP_404_NOT_FOUND)
-
             paginator = CustomPagination()
             paginated_products = paginator.paginate_queryset(products, request)
 
-            # Calculate profit margin for each product
             profit_margins = [
                 {
                     'product_name': product.name,

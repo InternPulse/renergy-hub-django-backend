@@ -3,10 +3,6 @@ import random
 from datetime import datetime, timedelta
 import uuid
 
-
-def generate_mock_product_data(num_products=10, years=3):
-    random.seed(42)  # Use a fixed seed
-
 def generate_mock_product_data(num_products=10, years=3):
     fake = Faker()
     
