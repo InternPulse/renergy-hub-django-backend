@@ -6,7 +6,6 @@ from .models import Product, SalesRecord, ProductEngagement
 from .serializers import ProductSerializer
 from .pagination import CustomPagination  # Updated import
 
-
 class TopSellingProductsView(APIView):
     """
     View to retrieve the top-selling products based on sales quantity.
