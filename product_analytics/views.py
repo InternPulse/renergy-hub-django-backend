@@ -1,22 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from django.db.models import Sum, Count
 from .models import Product, SalesRecord, ProductEngagement
 from .serializers import ProductSerializer
+from .pagination import CustomPagination  # Updated import
 
 # Create your views here
-
-# Custom Pagination Class
-class CustomPagination(PageNumberPagination):
-    page_size = 10
-
 
 class TopSellingProductsView(APIView):
     def get(self, request):
         try:
-            # Aggregate top-selling products
             top_products = (
                 SalesRecord.objects
                 .values('product')
@@ -26,15 +20,13 @@ class TopSellingProductsView(APIView):
 
             products = Product.objects.filter(id__in=[item['product'] for item in top_products])
 
-            # Paginate and serialize the results
             paginator = CustomPagination()
             paginated_products = paginator.paginate_queryset(products, request)
             serializer = ProductSerializer(paginated_products, many=True)
 
-            return paginator.get_paginated_response(serializer.data)  # Default: 200 OK
+            return paginator.get_paginated_response(serializer.data)
         except Exception:
             return Response({'error': 'An internal server error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 class ProductEngagementView(APIView):
     def post(self, request):
@@ -60,7 +52,6 @@ class ProductEngagementView(APIView):
 
     def get(self, request):
         try:
-            # Aggregate engagement data
             engagement_data = (
                 ProductEngagement.objects
                 .select_related('product')
@@ -69,30 +60,24 @@ class ProductEngagementView(APIView):
                 .order_by('-total_engagements')
             )
 
-            # Paginate and format the response
             paginator = CustomPagination()
             paginated_data = paginator.paginate_queryset(engagement_data, request)
             response_data = [
-                {
-                    'product_name': item['product__name'],
-                    'total_engagements': item['total_engagements']
-                } for item in paginated_data
+                {'product_name': item['product__name'], 'total_engagements': item['total_engagements']}
+                for item in paginated_data
             ]
 
-            return paginator.get_paginated_response(response_data)  # Default: 200 OK
+            return paginator.get_paginated_response(response_data)
         except Exception:
             return Response({'error': 'An internal server error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 class ProfitMarginView(APIView):
     def get(self, request):
         try:
-            # Fetch all products
             products = Product.objects.all()
             paginator = CustomPagination()
             paginated_products = paginator.paginate_queryset(products, request)
 
-            # Calculate profit margin for each product
             profit_margins = [
                 {
                     'product_name': product.name,
@@ -101,7 +86,7 @@ class ProfitMarginView(APIView):
                 } for product in paginated_products
             ]
 
-            return paginator.get_paginated_response(profit_margins)  # Default: 200 OK
+            return paginator.get_paginated_response(profit_margins)
         except ZeroDivisionError:
             return Response({'error': 'Division by zero occurred while calculating profit margin.'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
