@@ -71,18 +71,16 @@ if DEBUG:
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME'),
-            'USER': config('DB_USER'),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': config('DB_HOST'),
-            'PORT': config('DB_PORT'),
-            'OPTIONS': {
-                'sslmode': 'require',
-            },
-        }
+        'default': dj_database_url.parse(config('DATABASE_URL'), conn_max_age=600)
     }
+    
+
+    
+    
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'financial_analytics.pagination.CustomPageNumberPagination',
+    'PAGE_SIZE': 10,  # Default page size
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
