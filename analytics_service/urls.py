@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 
+
+
 api_url_patterns = [
     path('sales/', include('sales_analytics.urls')),
     path('product/', include('product_analytics.urls')),
