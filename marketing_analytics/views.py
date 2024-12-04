@@ -10,7 +10,9 @@ from .serializers import CartAbandonmentRateSerializer
 
 
 
+
 class CartAbandonmentRateAPIView(APIView):
+
     """
     API endpoint to get the cart abandonment rate.
     """

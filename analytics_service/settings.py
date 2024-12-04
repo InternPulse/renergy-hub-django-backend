@@ -1,7 +1,10 @@
 from decouple import config, Csv
 from pathlib import Path
 import dj_database_url
-from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -10,10 +13,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
-
-# JWT Secret Key and Cookie Name
-JWT_SECRET_KEY = config("JWT_SECRET_KEY")
-JWT_COOKIE_NAME = config("JWT_COOKIE_NAME", default="accessToken")  # Default value if not provided
 
 # Application definition
 INSTALLED_APPS = [
@@ -24,10 +23,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'sales_analytics',
     'product_analytics',
     'marketing_analytics',
     'financial_analytics',
+
+    
 ]
 
 MIDDLEWARE = [
@@ -35,7 +37,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'analytics_service.middleware.authentication.jwt_middleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -59,10 +60,12 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'analytics_service.wsgi.application'
 
 # Database configuration
 if DEBUG:
+    # Use local SQLite for development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -70,6 +73,7 @@ if DEBUG:
         }
     }
 else:
+    # Use PostgreSQL for production
     DATABASES = {
         'default': dj_database_url.parse(config('DATABASE_URL'), conn_max_age=600)
     }
@@ -78,37 +82,46 @@ else:
     
     
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'financial_analytics.pagination.CustomPageNumberPagination',
-    'PAGE_SIZE': 10,  # Default page size
+    'PAGE_SIZE': 10,
 }
+
+PRODUCT_MANAGEMENT_API_URL = "https://renergy-hub-express-backend.onrender.com/api/v1"
+
+#JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+#JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
+
+# Rest of the settings...
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
-# REST Framework configuration
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [],  # Authentication handled by middleware, no need for JWTAuthentication
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-}
+# Internationalization
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
 
-# Static Files
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
 
-# Additional Security for Production
-if not DEBUG:
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_SSL_REDIRECT = True
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
