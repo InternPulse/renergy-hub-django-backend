@@ -1,198 +1,194 @@
-# E-commerce Marketing_Analytics Service
-
-A Django-based service for tracking and analyzing cart abandonment rates in an e-commerce platform. This app provides REST API endpoints for querying analytics and offers a robust backend for monitoring marketing and conversion performance.
-
----
-
-## Features
-
-- **Cart Abandonment Rate**: Tracks how many users add products to their cart but leave without completing the purchase.
-- **REST API**: Exposes endpoints for querying cart abandonment rates.
-- **Database Models**: Includes models for managing products, carts, and cart items.
-
----
-
-## API Endpoints
-
-### Base URL: `http://127.0.0.1:8000/api/v1/cart-abandonment-rate/`
-
-| Endpoint                 | Method | Description                                  |
-|--------------------------|--------|----------------------------------------------|
-| `/marketing_analytics/abandonment` | GET    | Fetch cart abandonment rate for a time range.|
-
----
-
-## Usage
-
-1. Add products and carts using the Django Admin panel or API endpoints.
-2. Track cart and item activities.
-3. Use the `/marketing_analytics/abandonment` endpoint to fetch abandonment analytics.
-
----
-
----
-## test results
+Renergy Hub Express Backend API
 Project Overview
-Live link: [*] in progress, will be provided soon
-Doc link: [**] in progress, will be provided soon
+The Renergy Hub Express Backend API is a Django-based analytics service that provides insights into:
 
-This is a Django-based API designed for analytics services in areas such as sales performance, product analytics, marketing conversion and financial analytics.
-The system offers detailed insights to help businesses track key performance metrics and optimize their strategies accordingly.
-Key features include advanced filtering, data aggregation, and reporting
+Sales Performance
+Product Analytics
+Marketing Conversion
+Financial Analytics
+It helps businesses track critical metrics and optimize strategies with features like advanced filtering, data aggregation, and reporting.
+
+Project Overview
+Live link: is at https://codebrewmaster.pythonanywhere.com/api/v1
+
+Doc link: https://documenter.getpostman.com/view/36548151/2sAYBPmZm1
+
+Table of Contents
+Features
+Installation
+Usage
+API Endpoints
+Contributions
+Commit Standards and Guidelines
+Project Structure
+Environment Variables
+License
 
 
-Installation Instructions
+Features
+Advanced Analytics: Provides insights on key performance metrics.
+REST API: Allows querying and managing analytics data.
+Filters: Supports filtering by dates, products, and profitability.
+Data Aggregation: Compiles raw data into meaningful insights.
+Reporting: Offers downloadable and visual reports.
+
+
+Installation
+
 Prerequisites
-Before setting up the project locally, ensure you have the following prerequisites installed:
 
-Python 3.8+
+Ensure the following tools are installed:
+
+Python (>= 3.9 recommended)
+pip (Python package manager)
+Git
+Virtual environment tool (e.g., venv or virtualenv)
 PostgreSQL
-Virtualenv
 
-How to Run API Locally
+How to Run Locally
+
 Clone the repository:
 
-1. Clone the repository:
 bash
+Copy code
 git clone https://github.com/InternPulse/renergy-hub-django-backend.git
-
-Navigate to the project directory:
 cd renergy-hub-django-backend
-
 Set up the virtual environment:
 
-For Windows
+Windows:
+bash
+Copy code
 python -m venv venv
-
-For macOS/Linux
 .\venv\Scripts\activate
+macOS/Linux:
+bash
+Copy code
 python -m venv venv
 source venv/bin/activate
+Install dependencies:
 
-Install the app dependencies:
-pip install -r requirements.txt
-
-Set up the database and run migrations:
-python manage.py migrate
-
-Start the API server:
-python manage.py runserver
-
-The API should now be running locally at http://localhost:8000/.
-
-Commit Standards and Guidelines
-Branches
-dev → Use this branch for all backend-related work.
-main → Do not touch this branch, as it represents the production version.
-Contribution Guidelines
-Fork the repository.
-
-Set the origin branch:
 bash
-   git remote add origin https://github.com/InternPulse/renergy-hub-django-backend.git
+Copy code
+pip install -r requirements.txt
+Set up the database:
 
-Pull the latest changes from dev:
-git pull origin dev
+bash
+Copy code
+python manage.py migrate
+Start the server:
 
-Create a new branch for your task:
-git checkout -b TicketNumber/(Feat/Bug/Fix/Chore)/Ticket-title
+bash
+Copy code
+python manage.py runserver
+The API will be available at http://127.0.0.1:8000.
 
-After making changes, add and commit:
-git add .
-git commit -m "Your commit message"
-
-Push your branch:
-git push -u origin <dev>
-
-Open a pull request to dev (not main).
-
-Ensure your PR description is clear, especially if it introduces new functionality or requires testing
-
-![alt text](image.png)
-
-<<<<<<< HEAD
----
-=======
-Project Structure
-The project is organized as follows:
-
-analytics_service/
-├── analytics_service/           # Main project directory
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py             # Global settings
-│   ├── urls.py                 # Root URL configuration
-│   ├── wsgi.py
-│   ├── sales_performance/      # App for Sales Performance Analytics
-│   ├── migrations/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── serializers.py
-│   ├── tests.py
-│   ├── urls.py                 # App-specific URLs
-│   ├── views.py
-│   ├── product_performance/    # App for Product Performance Analytics
-│   ├── (similar structure as sales_performance)
-│   ├── marketing_conversion/   # App for Marketing & Conversion Analytics
-│   ├── (similar structure as sales_performance)
-│   ├── profitability_financial/ # App for Profitability & Financial Analytics
-│   ├── (similar structure as sales_performance)
-│   ├── shared/                  # Shared utilities and reusable components
-│   ├── __init__.py
-│   ├── filters.py               # Shared filters for all apps
-│   ├── utils.py                 # Helper functions
-│   ├── manage.py
-└── requirements.txt             # Project dependencies
-
+Usage
+Access the API locally or via the Live Link.
+Test endpoints using Postman, cURL, or other API testing tools.
+Refer to the API Documentation for detailed instructions.
 
 API Endpoints
-Here are some of the key endpoints available:
+Base URL:
+http://127.0.0.1:8000/api/v1/
 
-GET /api/v1/financial/analytics/
-Retrieves a list of all financial analytics records.
+Endpoint	Method	Description
+/financial/analytics/	GET	Fetch all financial analytics records.
+/financial/analytics/top_products/	GET	Get top products by profitability.
+/financial/analytics/?year=2022	GET	Filter analytics by year.
+/financial/analytics/?start_date=2023-01-01&end_date=2023-02-28	GET	Filter analytics by date range.
+/financial/analytics/profit_records/	GET	Fetch records with profit only.
+/financial/analytics/selling_at_loss/	GET	Fetch records with losses only.
+For the full list of endpoints, refer to the API Documentation.
 
-GET /api/v1/financial/analytics/top_products/
-Retrieves a list of all top products with the highest profit records.
 
-GET /api/v1/financial/analytics/?date=2024-11-12
-Retrieves a list of financial analytics products by date.
-
-GET /api/v1/financial/analytics/?day=28
-Retrieves a list of financial analytics products by day.
-
-GET /api/v1/financial/analytics/?year=2022
-Retrieves a list of financial analytics products by year.
-
-GET /api/v1/financial/analytics/?month=31
-Retrieves a list of financial analytics products by exact month and day.
-
-GET /api/v1/financial/analytics/?year=2022&month=12
-Retrieves a list of financial analytics products by exact month, day, and year.
-
-GET /api/v1/financial/analytics/?start_date=2023-01-01&end_date=2023-02-28
-Retrieves a list of financial analytics products by a date range.
-
-GET /api/v1/financial/analytics/profit_records/
-Retrieves a list of financial analytics product records with profit alone.
-
-GET /api/v1/financial/analytics/selling_at_loss/
-Retrieves a list of financial analytics products with loss alone.
-
+Project Structure
+plaintext
+Copy code
+renergy-hub-django-backend/
+├── analytics_service/
+│   ├── sales_performance/      # Sales Performance Analytics
+│   ├── product_performance/    # Product Performance Analytics
+│   ├── marketing_conversion/   # Marketing Analytics
+│   ├── profitability_financial/ # Financial Analytics
+│   ├── shared/                 # Shared utilities and helpers
+├── manage.py                   # Django entry point
+├── requirements.txt            # Python dependencies
+└── ...
 Environment Variables
-You need to configure the following environment variables for the project to run locally:
+Add a .env file with the following keys:
 
 bash
+Copy code
 SECRET_KEY=your-secret-key
 DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost,.(*) # Allow localhost and all subdomains
+ALLOWED_HOSTS=127.0.0.1,localhost
 
-# Database connection settings for PostgreSQL
+# PostgreSQL
 DB_NAME=your-database-name
 DB_USER=your-database-user
 DB_PASSWORD=your-database-password
-DB_HOST=your-database-host
-DB_PORT=your-database-port
+DB_HOST=localhost
+DB_PORT=5432
 
->>>>>>> 9de9372e78286d28221da403347361eace619be1
+
+
+Contributions
+Contributions are welcome! If you're interested in contributing:
+
+Create an issue or comment on the repository to let others know what you're working on. This avoids overlapping efforts.
+Follow the steps in the Contribution Guidelines below.
+Contribution Guidelines
+Clone the repo:
+
+bash
+Copy code
+git clone https://github.com/InternPulse/renergy-hub-express-backend.git
+Set the origin branch:
+
+bash
+Copy code
+git remote add origin https://github.com/InternPulse/renergy-hub-express-backend.git
+git pull origin dev
+Create a new branch for your task:
+
+bash
+Copy code
+git checkout -b BA-001/Feat/Sign-Up-form
+Make your changes and commit:
+
+bash
+Copy code
+git add .
+git commit -m "your commit message"
+Sync with the dev branch to avoid conflicts:
+
+bash
+Copy code
+git pull origin dev
+Push your branch:
+
+bash
+Copy code
+git push -u origin BA-001/Feat/Sign-Up-form
+Open a pull request to the dev branch and ensure the PR description is clear and includes any relevant test instructions.
+
+Commit Standards and Guidelines
+Commit Cheat Sheet
+Type	Description
+feat	Features: A new feature
+fix	Bug Fixes: A bug fix
+docs	Documentation: Documentation-only changes
+style	Styles: Formatting or cosmetic changes
+refactor	Code Refactoring: Neither fixes a bug nor adds a feature
+perf	Performance Improvements: Optimizes performance
+test	Tests: Adding or updating tests
+build	Builds: Changes to build tools or dependencies
+ci	Continuous Integration: Changes to CI configurations
+chore	Chores: Maintenance or configuration tasks
+revert	Reverts: Reverts a previous commit
+Sample Commit Messages
+chore: Update README file – No backend or test changes were made.
+feat: Add user registration endpoint – A new feature was added.
+
+License
+This project is licensed under the MIT License.
