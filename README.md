@@ -1,18 +1,29 @@
-
-# Renergy Hub Express Backend API
+ # Renergy Hub Express Backend API
 
 ## Project Overview
 
 The Renergy Hub Express Backend API is a Django-based analytics service designed to provide insights into critical business areas, including:
 
-- **Sales Performance**
-- **Product Analytics**
-- **Marketing Conversions**
-- **Financial Analytics**
+- **Sales Performance Analytics**  
+  - **Revenue Trends:** Track overall sales performance over time (e.g., daily, weekly, monthly, quarterly). Show revenue growth or decline trends to help vendors understand performance.  
+  - **Sales by Product:** Display which renewable energy products (solar panels, wind turbines, batteries, etc.) are generating the most revenue.  
+  - **Sales by Region/Location:** Identify which geographic areas or markets are generating the most sales, useful for targeting specific regions.  
+  - **Sales by Time of Year:** Renewable energy products may have seasonal trends (e.g., increased sales in summer for solar products). Track sales spikes or dips during different times of the year.  
+
+- **Product Performance Analytics**  
+  - **Top-Selling Products:** List products that are selling the most, helping vendors understand demand patterns.  
+  - **Product Views and Engagement:** Track how many views or interactions a product page receives, which can help understand customer interest even if sales haven’t been made yet.  
+  - **Profit Margin by Product:** Show how profitable each product is by calculating the margin between cost and sales price.  
+
+- **Marketing & Conversion Analytics**  
+  - **Cart Abandonment Rate:** Track how many customers add products to the cart but leave without purchasing.  
+
+- **Profitability & Financial Analytics**  
+  - **Gross Profit and Net Profit:** Track gross and net profits over time, showing how operational costs are affecting profitability.  
 
 It empowers businesses with advanced features such as filtering, data aggregation, and reporting to optimize strategies and monitor key metrics effectively.
+"""
 
----
 
 ## Live Link
 
