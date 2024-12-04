@@ -22,7 +22,6 @@ The Renergy Hub Express Backend API is a Django-based analytics service designed
   - **Gross Profit and Net Profit:** Track gross and net profits over time, showing how operational costs are affecting profitability.  
 
 It empowers businesses with advanced features such as filtering, data aggregation, and reporting to optimize strategies and monitor key metrics effectively.
-"""
 
 
 ## Live Link
