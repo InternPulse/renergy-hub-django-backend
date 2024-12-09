@@ -2,7 +2,7 @@ from django.db import models
 
 class Cart(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user_id = models.IntegerField()  # Adjust based on your schema
+    user_id = models.IntegerField()
     category_id = models.IntegerField()
     name = models.CharField(max_length=255)
     stock = models.IntegerField()
@@ -10,5 +10,9 @@ class Cart(models.Model):
     is_purchased = models.BooleanField(default=False)
 
     class Meta:
-        managed = False  # This prevents Django from managing the table
+        managed = True
         db_table = 'cart'
+
+    def __str__(self):
+        return self.name
+

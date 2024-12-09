@@ -1,103 +1,114 @@
 from django.test import TestCase
-from django.utils import timezone
-from datetime import datetime, timedelta
-from decimal import Decimal
-from .models import Sale
+from unittest.mock import patch, MagicMock
+from datetime import datetime, date
+import pytz
+import requests
 from .services import SalesPerformanceService
-from .api.v1.serializers import SalesPerformanceSerializer
+from .api_client import ProductManagementAPI
 
-# Create your tests here.
-
-
-class SalesAnalyticsTests(TestCase):
+class TestSalesPerformanceService(TestCase):
     def setUp(self):
-        # Create test data
-        self.now = timezone.now()
-        self.products = ["solar_panels", "wind_turbines", "batteries"]
-        self.prices = {"solar_panels": 1000, "wind_turbines": 2000, "batteries": 500}
+        self.service = SalesPerformanceService()
+        self.mock_products = [
+            {"id": 1, "name": "Product A", "stock": 10, "price": "100.00", "createdAt": "2023-01-15T10:00:00Z"},
+            {"id": 2, "name": "Product B", "stock": 5, "price": "50.00", "createdAt": "2023-02-20T14:30:00Z"},
+            {"id": 3, "name": "Product A", "stock": 8, "price": "100.00", "createdAt": "2023-03-10T09:15:00Z"},
+        ]
 
-        # Create sales for the last 90 days
-        for i in range(90):
-            date = self.now - timedelta(days=i)
-            for product in self.products:
-                Sale.objects.create(
-                    product=product,
-                    quantity=i % 5 + 1,  # Varying quantities 1-5
-                    price=self.prices[product],
-                    created_at=date,
-                )
+    @patch.object(ProductManagementAPI, 'get_products')
+    def test_get_revenue_trends(self, mock_get_products):
+        mock_get_products.return_value = self.mock_products
+        trends = self.service.get_revenue_trends()
 
-    def test_get_revenue_trends(self):
-        service = SalesPerformanceService()
-        trends = service.get_revenue_trends()
+        self.assertIn('daily', trends)
+        self.assertIn('weekly', trends)
+        self.assertIn('monthly', trends)
+        self.assertIn('quarterly', trends)
 
-        # Test structure
-        self.assertIn("daily", trends)
-        self.assertIn("weekly", trends)
-        self.assertIn("monthly", trends)
-        self.assertIn("quarterly", trends)
+        # Check daily revenue
+        self.assertEqual(trends['daily']['2023-01-15'], 1000.0)
+        self.assertEqual(trends['daily']['2023-02-20'], 250.0)
+        self.assertEqual(trends['daily']['2023-03-10'], 800.0)
 
-        # Test daily revenues
-        daily_revenues = trends["daily"]
-        self.assertTrue(len(daily_revenues) > 0)
-        self.assertIn("day", daily_revenues[0])
-        self.assertIn("revenue", daily_revenues[0])
+        # Check monthly revenue
+        self.assertEqual(trends['monthly'][1], 1000.0)
+        self.assertEqual(trends['monthly'][2], 250.0)
+        self.assertEqual(trends['monthly'][3], 800.0)
 
-        # Test revenue calculations
-        first_day = daily_revenues[0]
-        self.assertIsInstance(first_day["revenue"], (int, float, Decimal))
-        self.assertTrue(first_day["revenue"] >= 0)
+    @patch.object(ProductManagementAPI, 'get_products')
+    def test_get_revenue_trends_error_handling(self, mock_get_products):
+        mock_get_products.side_effect = Exception("API Error")
+        
+        with self.assertRaises(RuntimeError):
+            self.service.get_revenue_trends()
+            
+            
+    def test_parse_date(self):
+        # Test UTC date
+        utc_date = self.service.parse_date("2023-01-15T10:00:00Z")
+        self.assertEqual(utc_date, datetime(2023, 1, 15, 10, 0, tzinfo=pytz.UTC))
 
-    def test_get_sales_by_product(self):
-        service = SalesPerformanceService()
-        sales = service.get_sales_by_product()
+        # Test non-UTC date (now assumed to be UTC)
+        non_utc_date = self.service.parse_date("2023-02-20T14:30:00")
+        self.assertEqual(non_utc_date, datetime(2023, 2, 20, 14, 30, tzinfo=pytz.UTC))
 
-        # Test all products are present
-        for product in self.products:
-            self.assertIn(product, sales)
+        # Test date with microseconds
+        micro_date = self.service.parse_date("2023-03-25T08:45:30.123456")
+        self.assertEqual(micro_date, datetime(2023, 3, 25, 8, 45, 30, 123456, tzinfo=pytz.UTC))
 
-        # Test sales values
-        for product, amount in sales.items():
-            self.assertIsInstance(amount, (int, float, Decimal))
-            self.assertTrue(amount >= 0)
+        # Test invalid date
+        with self.assertRaises(ValueError):
+            self.service.parse_date("invalid-date")
+            
+    @patch.object(ProductManagementAPI, 'get_products')
+    def test_get_sales_by_product(self, mock_get_products):
+        mock_get_products.return_value = self.mock_products
+        sales = self.service.get_sales_by_product()
 
-        # Verify relative amounts (wind turbines should have highest revenue due to price)
-        self.assertTrue(sales["wind_turbines"] > sales["solar_panels"])
-        self.assertTrue(sales["solar_panels"] > sales["batteries"])
+        self.assertEqual(sales['Product A'], 1800.0)
+        self.assertEqual(sales['Product B'], 250.0)
 
-    def test_serializer_success(self):
-        service = SalesPerformanceService()
-        data = {
-            "revenue_trends": service.get_revenue_trends(),
-            "sales_by_product": service.get_sales_by_product(),
-        }
+    @patch.object(ProductManagementAPI, 'get_products')
+    def test_get_sales_by_time_of_year(self, mock_get_products):
+        mock_get_products.return_value = self.mock_products
+        sales = self.service.get_sales_by_time_of_year()
 
-        serializer = SalesPerformanceSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
-        serialized_data = serializer.data
+        self.assertEqual(sales[1], 1000.0)
+        self.assertEqual(sales[2], 250.0)
+        self.assertEqual(sales[3], 800.0)
 
-        # Test status and message
-        self.assertEqual(serialized_data["status"], "success")
-        self.assertEqual(serialized_data["message"], "Data retrieved successfully")
+    @patch.object(ProductManagementAPI, 'get_products')
+    def test_error_handling_in_revenue_calculation(self, mock_get_products):
+        # Test with a product missing required fields
+        invalid_product = {"id": 4, "name": "Invalid Product", "stock": "invalid", "price": "not a number"}
+        mock_get_products.return_value = self.mock_products + [invalid_product]
 
-        # Test data structure
-        self.assertIn("revenue_trends", serialized_data)
-        self.assertIn("sales_by_product", serialized_data)
+        # This should not raise an exception, but log an error
+        trends = self.service.get_revenue_trends()
 
-    def test_serializer_with_empty_data(self):
-        # Test with empty data
-        data = {
-            "revenue_trends": {},
-            "sales_by_product": {},
-        }
+        # Check that valid products are still processed
+        self.assertEqual(trends['daily']['2023-01-15'], 1000.0)
+        self.assertEqual(trends['daily']['2023-02-20'], 250.0)
+        self.assertEqual(trends['daily']['2023-03-10'], 800.0)
 
-        serializer = SalesPerformanceSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
-        serialized_data = serializer.data
+class TestProductManagementAPI(TestCase):
+    def setUp(self):
+        self.api = ProductManagementAPI()
 
-        # Even with empty data, status should be success
-        self.assertEqual(serialized_data["status"], "success")
+    @patch('requests.get')
+    def test_get_products(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.json.return_value = {'data': [{'id': 1, 'name': 'Test Product'}]}
+        mock_get.return_value = mock_response
 
-    def tearDown(self):
-        # Clean up test data
-        Sale.objects.all().delete()
+        products = self.api.get_products()
+
+        self.assertEqual(products, [{'id': 1, 'name': 'Test Product'}])
+        mock_get.assert_called_once_with(f"{self.api.base_url}/products")
+
+    @patch('requests.get')
+    def test_get_products_error(self, mock_get):
+        mock_get.side_effect = requests.exceptions.RequestException("API Error")
+
+        with self.assertRaises(requests.exceptions.RequestException):
+            self.api.get_products()
