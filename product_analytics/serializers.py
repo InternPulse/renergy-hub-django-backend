@@ -1,11 +1,10 @@
 from rest_framework import serializers
-from .models import Product
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id', 'name', 'description', 'cost_price', 'selling_price']
-        read_only_fields = ['id'] 
+class ProductSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255)
+    count = serializers.IntegerField()
 
-
-
+class ResponseSerializer(serializers.Serializer):
+    status = serializers.CharField(default="success")
+    message = serializers.CharField(default="Data retrieved successfully")
+    data = ProductSerializer(many=True)
