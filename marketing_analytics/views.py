@@ -5,10 +5,6 @@ from .serializers import CartAbandonmentRateSerializer
 
 
 
-
-
-
-
 class CartAbandonmentRateAPIView(APIView):
     def get(self, request):
         # Calculate stats
