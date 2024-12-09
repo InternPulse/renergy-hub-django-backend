@@ -3,10 +3,6 @@ from pathlib import Path
 import dj_database_url
 import os
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,6 +55,24 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "errors.log"),
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+    },
+}
 
 WSGI_APPLICATION = "analytics_service.wsgi.application"
 
@@ -77,7 +91,6 @@ else:
         "default": dj_database_url.parse(config("DATABASE_URL"), conn_max_age=600)
     }
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -87,11 +100,6 @@ REST_FRAMEWORK = {
 }
 
 PRODUCT_MANAGEMENT_API_URL = "https://renergy-hub-express-backend.onrender.com/api/v1"
-
-# JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-# JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
-
-# Rest of the settings...
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -117,6 +125,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
