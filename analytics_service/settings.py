@@ -20,7 +20,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework_simplejwt",
     "sales_analytics",
     "product_analytics",
     "marketing_analytics",
@@ -92,9 +91,7 @@ else:
     }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    
     'DEFAULT_PAGINATION_CLASS': 'financial_analytics.pagination.CustomPageNumberPagination',
     'PAGE_SIZE': 10,
 }
