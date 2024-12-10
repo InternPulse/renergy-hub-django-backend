@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['*']  # You'll update this later with your Render URL
+ALLOWED_HOSTS = ['renergy-hub-django-backend.onrender.com', 'localhost', '127.0.0.1'] #updated after deployment
 
 # Add these for security
 if not DEBUG:
