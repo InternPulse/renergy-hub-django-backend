@@ -3,13 +3,29 @@ from pathlib import Path
 import dj_database_url
 import os
 
+import logging
+logger = logging.getLogger(__name__)
+
+import environ
+
+env = environ.Env()
+environ.Env.read_env()  # This loads the .env file
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
-SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", default=False, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
+
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = ['*']  # You'll update this later with your Render URL
+
+# Add these for security
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Application definition
 INSTALLED_APPS = [
@@ -75,21 +91,25 @@ LOGGING = {
 
 WSGI_APPLICATION = "analytics_service.wsgi.application"
 
-# Database configuration
-if DEBUG:
-    # Use local SQLite for development
+
+
+DATABASE_URL = config('DATABASE_URL', default=None)
+logger.error(f"DATABASE_URL: {DATABASE_URL}")
+
+if DATABASE_URL:
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    }
+    logger.error(f"Using DATABASE_URL: {DATABASES['default']}")
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-else:
-    # Use PostgreSQL for production
-    DATABASES = {
-        "default": dj_database_url.parse(config("DATABASE_URL"), conn_max_age=600)
-    }
-
+    logger.error("Using SQLite database")
+    
 REST_FRAMEWORK = {
     
     'DEFAULT_PAGINATION_CLASS': 'financial_analytics.pagination.CustomPageNumberPagination',
@@ -119,6 +139,8 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
