@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    'corsheaders',
     "sales_analytics",
     "product_analytics",
     "marketing_analytics",
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware", 
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -52,6 +54,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "https://renergy-hub-frontendxyz.vercel.app",  # Frontend hosted on Vercel
+    "http://127.0.0.1:8000",  # Local development server
+    "http://127.0.0.1:3000",  # Local development server
+]
 ROOT_URLCONF = "analytics_service.urls"
 
 TEMPLATES = [
