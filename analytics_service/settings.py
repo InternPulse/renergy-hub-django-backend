@@ -57,7 +57,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "https://renergy-hub-frontendxyz.vercel.app",  # Frontend hosted on Vercel
     "http://127.0.0.1:8000",  # Local development server
-    "http://127.0.0.1:3000",  # Local development server
+    "http://127.0.0.1:5173",  # Local development server
 ]
 ROOT_URLCONF = "analytics_service.urls"
 
