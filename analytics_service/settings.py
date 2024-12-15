@@ -54,15 +54,16 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# For development (allows all origins):
-CORS_ALLOW_ALL_ORIGINS = True
+# # For development (allows all origins):
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # For production (specify allowed origins):
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-#     "http://127.0.0.1:5173",
-#     "https://your-frontend-domain.com",
-# ]
+CORS_ALLOWED_ORIGINS = [
+     "http://localhost:5173",
+     "http://127.0.0.1:5173",
+     "https://renergy-hub-frontendxyz.vercel.app",
+ ]
+ 
 ROOT_URLCONF = "analytics_service.urls"
 
 TEMPLATES = [
